@@ -1,0 +1,34 @@
+<components>
+
+    <!-- Componenta care gestioneaza comunicarea HTTP -->
+    <!-- 'networkCommunicator' este instanta clasei 'NetworkCommunicatorImpl' -->
+    <component id="networkCommunicator" class="movieLister.NetworkCommunicatorImpl"/>
+
+    <!-- Componenta care gestioneaza accesul la baza de date si care depinde de NetworkCommunicator -->
+    <!-- 'databaseAccess' este instanta clasei 'DatabaseAccessImpl' -->
+    <component id="databaseAccess" class="movieLister.DatabaseAccessImpl">
+        <constructor>
+            <!-- Injecteaza componenta 'networkCommunicator' pentru a permite accesul la baza de date prin HTTP -->
+            <arg ref="networkCommunicator"/>
+        </constructor>
+    </component>
+
+    <!-- Componenta care gaseste filmele si care depinde de DatabaseAccess -->
+    <!-- 'movieFinder' este instanta clasei 'MovieFinderImpl'-->
+    <component id="movieFinder" class="movieLister.MovieFinderImpl">
+        <constructor>
+            <!-- Injecteaza componenta 'databaseAccess' pentru a accesa datele necesare pentru cautarea filmelor -->
+            <arg ref="databaseAccess"/>
+        </constructor>
+    </component>
+
+    <!-- Componenta principala care depinde de MovieFinder pentru a accesa functionalitatile de cautare a filmelor -->
+    <!-- 'movieLister' este instanta clasei 'MovieLister'-->
+    <component id="movieLister" class="movieLister.MovieLister">
+        <constructor>
+            <!-- Injecteaza componenta 'movieFinder' pentru a putea lista filmele gasite -->
+            <arg ref="movieFinder"/>
+        </constructor>
+    </component>
+
+</components>

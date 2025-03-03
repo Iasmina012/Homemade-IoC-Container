@@ -1,0 +1,40 @@
+<components>
+
+    <!-- Componenta care gestioneaza conectarea HTTP -->
+    <!-- 'networkService' este instanta clasei 'NetworkServiceImpl' -->
+    <component id="networkService" class="notificationSender.NetworkServiceImpl"/>
+
+    <!-- Componenta care gestioneaza accesul la utilizatori si care depinde de NetworkService -->
+    <!-- 'userRepository' este instanta clasei 'UserRepositoryImpl' -->
+    <component id="userRepository" class="notificationSender.UserRepositoryImpl">
+        <constructor>
+            <!-- Injecteaza componenta 'networkService' pentru a permite conectarea la resurse externe -->
+            <arg ref="networkService"/>
+        </constructor>
+    </component>
+
+    <!-- Componenta care valideaza parolele utilizatorilor -->
+    <!-- 'passwordValidator' este instanta clasei 'PasswordValidator' -->
+    <component id="passwordValidator" class="notificationSender.PasswordValidator"/>
+
+    <!-- Componenta principala pentru autentificare, care depinde de UserRepository si PasswordValidator -->
+    <!-- 'authenticationService' este instanta clasei 'AuthenticationServiceImpl' -->
+    <component id="authenticationService" class="notificationSender.AuthenticationServiceImpl">
+        <constructor>
+            <!-- Injecteaza componenta 'userRepository' pentru accesul la datele utilizatorilor -->
+            <arg ref="userRepository"/>
+            <!-- Injecteaza componenta 'passwordValidator' pentru validarea parolelor -->
+            <arg ref="passwordValidator"/>
+        </constructor>
+    </component>
+
+    <!-- Componenta care trimite notificari si depinde de AuthenticationService -->
+    <!-- 'notificationSender' este instanta clasei 'NotificationSender' -->
+    <component id="notificationSender" class="notificationSender.NotificationSender">
+        <constructor>
+            <!-- Injecteaza componenta 'authenticationService' pentru a determina autentificarea utilizatorilor -->
+            <arg ref="authenticationService"/>
+        </constructor>
+    </component>
+
+</components>
